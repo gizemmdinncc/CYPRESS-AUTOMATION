@@ -234,7 +234,7 @@ describe("API TESTING WEATHERSTACK", () => {
       expect(response.status).to.be.oneOf([400, 429])
       expect(response.body.success).to.eq(false)
 
-      // Status durumuna göre hata tipini kontrol et
+      
       if(response.status === 400){
         expect(response.body.error.type).to.eq("forecast_days_not_supported_on_plan")
       }
