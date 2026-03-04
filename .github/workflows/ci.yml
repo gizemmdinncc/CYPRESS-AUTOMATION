@@ -33,7 +33,7 @@ jobs:
         with: 
           node-version: 20
       - name: Run Cypress Tests
-        run: npx cypress run
+        run: npx cypress run --config-file ./cypress.config.js
         working-directory: .
       - name: Upload Cypress Videos
         if: always()
