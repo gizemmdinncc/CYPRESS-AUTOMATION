@@ -33,9 +33,9 @@ jobs:
         with: 
           node-version: 20
       - name: Install dependencies
-        uses: npm install
+        run: npm install
       - name: Run Cypress Tests
-        uses: npx cypress run
+        run: npx cypress run
       - name: Upload Cypress Videos
         if: always()
         uses:  actions/upload-artifact@v4
@@ -45,7 +45,7 @@ jobs:
           retention-days: 1
       - name: Upload Cypress Screenshots
         if: always()
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with: 
           name: Cypress Screenshots
           path: cypress/screenshots/**/*.mp4
