@@ -1,0 +1,54 @@
+name: CI-CD Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
+  push:
+    branches: 
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Job
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Echo user login
+        run: echo "Hello, $ {{ https://github.com/gizemmdinncc }}"
+  test: 
+    runs-on: ubuntu-latest
+    name: Cypress Test Job
+    container: 
+      image: cypress/base:latest
+    
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 20
+      - name: Install dependencies
+        uses: npm install
+      - name: Run Cypress Tests
+        uses: npx cypress run
+      - name: Upload Cypress Videos
+        if: always()
+        uses:  actions/upload-artifact@v4
+        with: 
+          name: Cypress Videos
+          path: cypress/videos/**/*.mp4
+          retention-days: 1
+      - name: Upload Cypress Screenshots
+        if: always()
+        uses: actions/upload-artifact@4
+        with: 
+          name: Cypress Screenshots
+          path: cypress/screenshots/**/*.mp4
+          retention-days: 1    
+
+    
