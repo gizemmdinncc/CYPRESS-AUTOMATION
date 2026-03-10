@@ -1,0 +1,51 @@
+config:
+  target: "http://data.fixer.io"
+  phases:
+    - duration: 1
+      arrivalRate: 1
+      name: "Scalability Test1"
+    - duration: 1
+      arrivalRate: 2
+      name: "Scalability Test2"
+    - duration: 1
+      arrivalRate: 3
+      name: "Scalability Test3"
+
+  plugins: 
+    ensure: {}
+  ensure: 
+    statuscode: 200, 201
+    thresholds: 
+      - http.response_time.p95: 400
+      - http.response_time.p99: 400
+    conditions: 
+      - expression: "http.request_rate >= 0.01 and http.response.time.max < 1000"
+
+  payload: 
+    -
+      path: "users.csv"
+      fields: 
+        - email
+        - password
+        - name
+      order: sequence
+
+scenarios:
+  - name: "TC YAML"
+    flow:
+      - get:
+          url: "/api/symbols?access_key=fd59803489dc8ffb4591558b8dc75e33"
+      - post: 
+          url: "/api/2024-10-02?access_key=fd59803489dc8ffb4591558b8dc75e33"
+          json: 
+            email: "email"
+            password: "password"
+            name: "name"
+          capture: 
+            - json: "$.json"
+              as: "request_body"
+            - json: "$.hearders.Host"
+              as: "host"
+      - log: "Json value from response is:{{request.request_body}}"    
+      - log: "Json value from response is: {{host}}"
+
